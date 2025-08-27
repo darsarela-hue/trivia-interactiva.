@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trivia Interactiva</title>
+<style>
+  body { font-family: 'Arial', sans-serif; background: linear-gradient(to right, #6a11cb, #2575fc); color: #fff; text-align: center; padding: 20px; }
+  .question { font-size: 1.5em; margin-bottom: 20px; }
+  .options button { display: block; width: 80%; margin: 10px auto; padding: 10px; font-size: 1.2em; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+  .options button:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+  .score { font-size: 1.5em; margin-top: 30px; }
+</style>
+</head>
+<body>
+<h1>🎯 Trivia de Conocimientos 🎯</h1>
+<div id="game">
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+</div>
+<div class="score" id="score"></div>
+<audio id="correctSound" src="correct.mp3"></audio>
+<audio id="wrongSound" src="wrong.mp3"></audio>
+<script>
+const questions = [
+  {question: "¿Cuál es el sistema operativo más usado en móviles?", options: ["Android", "iOS", "Windows Phone"], answer: 0},
+  {question: "¿Qué significa HTML?", options: ["HyperText Markup Language", "HighText Machine Language", "Hyperloop Machine Language"], answer: 0},
+  {question: "¿Qué comando usamos para encender la computadora?", options: ["Power On", "Start", "Boot"], answer: 2}
+];
+let currentQuestion = 0;
+let score = 0;
+function loadQuestion() {
+  if(currentQuestion >= questions.length){
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('score').innerHTML = `🏆 ¡Terminaste! Tu puntaje es: ${score} / ${questions.length}`;
+    return;
+  }
+  const q = questions[currentQuestion];
+  document.getElementById('question').textContent = q.question;
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  q.options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = option;
+    btn.onclick = () => checkAnswer(index);
+    optionsDiv.appendChild(btn);
+  });
+}
+function checkAnswer(selected){
+  const correctSound = document.getElementById('correctSound');
+  const wrongSound = document.getElementById('wrongSound');
+  if(selected === questions[currentQuestion].answer){
+    score++;
+    correctSound.play();
+    alert("✅ ¡Correcto!");
+  } else {
+    wrongSound.play();
+    alert(`❌ Incorrecto. La respuesta correcta era: ${questions[currentQuestion].options[questions[currentQuestion].answer]}`);
+  }
+  currentQuestion++;
+  loadQuestion();
+}
+loadQuestion();
+</script>
+</body>
+</html>
